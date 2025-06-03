@@ -19,7 +19,7 @@ function addTask() {
 <template>
   <form @submit.prevent="addTask">
     <label for="newTask">
-      New Task
+      Add a new Task
       <input
         v-model="newTask"
         type="text"
