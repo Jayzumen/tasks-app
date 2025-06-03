@@ -68,18 +68,18 @@ function setFilter(value: TaskFilter) {
 
       <h3>Clear tasks</h3>
       <div class="button-container">
-        <button @click="tasks = []">Clear all tasks</button>
+        <button @click="tasks = []">Clear all</button>
         <button
           class="secondary"
           @click="tasks = tasks.filter((task) => !task.done)"
         >
-          Clear completed tasks
+          Clear completed
         </button>
         <button
           class="contrast"
           @click="tasks = tasks.filter((task) => task.done)"
         >
-          Clear open tasks
+          Clear open
         </button>
       </div>
     </div>
