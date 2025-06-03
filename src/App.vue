@@ -2,10 +2,12 @@
 import { computed, ref } from "vue";
 import TaskForm from "./components/TaskForm.vue";
 import TaskList from "./components/TaskList.vue";
+import FilterButton from "./components/FilterButton.vue";
 
 const storedTasks = localStorage.getItem("tasks");
 
 const tasks = ref<Task[]>(storedTasks ? JSON.parse(storedTasks) : []);
+const filter = ref<TaskFilter>("all");
 
 function addTask(task: string) {
   tasks.value.push({ id: crypto.randomUUID(), title: task, done: false });
@@ -15,17 +17,21 @@ function addTask(task: string) {
 
 const openTasks = computed(() => tasks.value.filter((task) => !task.done));
 
-const filter = ref<"all" | "completed" | "open">("all");
-
 const filteredTasks = computed(() => {
-  if (filter.value === "completed") {
-    return tasks.value.filter((task) => task.done);
-  } else if (filter.value === "open") {
-    return tasks.value.filter((task) => !task.done);
-  } else {
-    return tasks.value;
+  switch (filter.value) {
+    case "all":
+      return tasks.value;
+    case "done":
+      return tasks.value.filter((task) => task.done);
+    case "todo":
+      return tasks.value.filter((task) => !task.done);
   }
+  return tasks.value;
 });
+
+function setFilter(value: TaskFilter) {
+  filter.value = value;
+}
 </script>
 
 <template>
@@ -43,18 +49,36 @@ const filteredTasks = computed(() => {
     <div v-if="tasks.length" class="button-container-wrapper">
       <h3>Filter tasks</h3>
       <div class="button-container">
-        <button @click="filter = 'all'">All</button>
-        <button @click="filter = 'completed'">Completed</button>
-        <button @click="filter = 'open'">Open</button>
+        <FilterButton
+          :currentFilter="filter"
+          filter="all"
+          @set-filter="setFilter"
+        />
+        <FilterButton
+          :currentFilter="filter"
+          filter="todo"
+          @set-filter="setFilter"
+        />
+        <FilterButton
+          :currentFilter="filter"
+          filter="done"
+          @set-filter="setFilter"
+        />
       </div>
 
       <h3>Clear tasks</h3>
       <div class="button-container">
         <button @click="tasks = []">Clear all tasks</button>
-        <button @click="tasks = tasks.filter((task) => !task.done)">
+        <button
+          class="secondary"
+          @click="tasks = tasks.filter((task) => !task.done)"
+        >
           Clear completed tasks
         </button>
-        <button @click="tasks = tasks.filter((task) => task.done)">
+        <button
+          class="contrast"
+          @click="tasks = tasks.filter((task) => task.done)"
+        >
           Clear open tasks
         </button>
       </div>
