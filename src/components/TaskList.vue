@@ -1,6 +1,5 @@
 <script setup lang="ts">
 const props = defineProps<{ tasks: Task[] }>();
-
 function toggleTask(task: Task) {
   task.done = !task.done;
 
@@ -17,9 +16,12 @@ function deleteTask(task: Task) {
 <template>
   <TransitionGroup name="list" tag="div" class="task-list">
     <article
-      v-for="task in props.tasks"
+      v-for="(task, index) in props.tasks"
       :key="task.id"
-      :class="{ done: task.done }"
+      :class="[
+        { done: task.done },
+        index === props.tasks.length - 1 ? 'last-task' : 'other-task',
+      ]"
     >
       <h3>{{ task.title }}</h3>
       <div>
@@ -51,9 +53,15 @@ article {
 .list-leave-active {
   transition: all 0.5s ease;
 }
-.list-enter-from,
-.list-leave-to {
+.last-task.list-enter-from,
+.last-task.list-leave-to {
   opacity: 0;
-  transform: translateX(30px);
+  transform: translateY(30px);
+}
+
+.other-task.list-enter-from,
+.other-task.list-leave-to {
+  opacity: 0;
+  transform: translateX(-30px);
 }
 </style>
