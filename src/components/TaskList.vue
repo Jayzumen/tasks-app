@@ -6,6 +6,16 @@ function toggleTask(task: Task) {
   localStorage.setItem("tasks", JSON.stringify(props.tasks));
 }
 
+function startEditing(task: Task) {
+  task.editing = true;
+}
+
+function saveEdit(task: Task, newTitle: string) {
+  task.title = newTitle;
+  task.editing = false;
+  localStorage.setItem("tasks", JSON.stringify(props.tasks));
+}
+
 function deleteTask(task: Task) {
   props.tasks.splice(props.tasks.indexOf(task), 1);
 
@@ -23,13 +33,26 @@ function deleteTask(task: Task) {
         index === props.tasks.length - 1 ? 'last-task' : 'other-task',
       ]"
     >
-      <h3>{{ task.title }}</h3>
-      <div>
+      <div v-if="task.editing">
+        <input v-model="task.title" @keyup.enter="saveEdit(task, task.title)" />
+      </div>
+      <h3 v-else>{{ task.title }}</h3>
+      <div class="button-container">
         <input
           type="checkbox"
           :checked="task.done"
           @change="toggleTask(task)"
         />
+        <button
+          v-if="!task.editing"
+          @click="startEditing(task)"
+          class="secondary"
+        >
+          Edit
+        </button>
+        <button v-else @click="task.editing = false" class="contrast">
+          Cancel
+        </button>
         <button @click="deleteTask(task)">Remove</button>
       </div>
     </article>
@@ -47,6 +70,12 @@ article {
 .done {
   background-color: green;
   text-decoration: line-through;
+}
+
+.button-container {
+  gap: 1rem;
+  display: flex;
+  align-items: center;
 }
 
 .list-enter-active,
