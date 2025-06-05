@@ -39,48 +39,52 @@ function setFilter(value: TaskFilter) {
     <h1>Vue Task App</h1>
     <TaskForm @add-task="addTask" />
 
-    <h2 v-if="!tasks.length">Add a task to get started</h2>
-    <h2 v-else-if="tasks.length && openTasks.length">
+    <h3 v-if="!tasks.length">Add a task to get started</h3>
+    <h3 v-else-if="tasks.length && openTasks.length">
       {{ tasks.length - openTasks.length }} / {{ tasks.length }}
       {{ tasks.length === 1 ? "task" : "tasks" }} open
-    </h2>
-    <h2 v-else>All tasks completed</h2>
+    </h3>
+    <h3 v-else>All tasks completed</h3>
 
     <div v-if="tasks.length" class="button-container-wrapper">
-      <h3>Filter tasks</h3>
-      <div class="button-container">
-        <FilterButton
-          :currentFilter="filter"
-          filter="all"
-          @set-filter="setFilter"
-        />
-        <FilterButton
-          :currentFilter="filter"
-          filter="todo"
-          @set-filter="setFilter"
-        />
-        <FilterButton
-          :currentFilter="filter"
-          filter="done"
-          @set-filter="setFilter"
-        />
+      <div class="button-container-layout">
+        <h4>Filter tasks</h4>
+        <div class="button-container">
+          <FilterButton
+            :currentFilter="filter"
+            filter="all"
+            @set-filter="setFilter"
+          />
+          <FilterButton
+            :currentFilter="filter"
+            filter="todo"
+            @set-filter="setFilter"
+          />
+          <FilterButton
+            :currentFilter="filter"
+            filter="done"
+            @set-filter="setFilter"
+          />
+        </div>
       </div>
 
-      <h3>Clear tasks</h3>
-      <div class="button-container">
-        <button @click="tasks = []">Clear all</button>
-        <button
-          class="secondary"
-          @click="tasks = tasks.filter((task) => !task.done)"
-        >
-          Clear completed
-        </button>
-        <button
-          class="contrast"
-          @click="tasks = tasks.filter((task) => task.done)"
-        >
-          Clear open
-        </button>
+      <div class="button-container-layout">
+        <h4>Clear tasks</h4>
+        <div class="button-container">
+          <button @click="tasks = []">Clear all</button>
+          <button
+            class="secondary"
+            @click="tasks = tasks.filter((task) => !task.done)"
+          >
+            Clear completed
+          </button>
+          <button
+            class="contrast"
+            @click="tasks = tasks.filter((task) => task.done)"
+          >
+            Clear open
+          </button>
+        </div>
       </div>
     </div>
 
@@ -92,7 +96,7 @@ function setFilter(value: TaskFilter) {
 main {
   display: flex;
   flex-direction: column;
-  gap: 2rem;
+  gap: 1rem;
   padding: 1rem;
   margin: 1rem auto;
   max-width: 800px;
@@ -104,7 +108,13 @@ main {
   }
 
   .button-container-wrapper {
-    h3 {
+    .button-container-layout {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      margin-top: 0.5rem;
+    }
+    h4 {
       margin-top: 1rem;
       margin-bottom: 1rem;
     }
